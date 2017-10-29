@@ -1,2 +1,4 @@
-Folder for DoomPy
-Wayne Nixalo
+# DoomPy
+
+Folder for the DoomPy project
+© Wayne Nixalo
