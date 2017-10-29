@@ -1,5 +1,5 @@
 # videos
-.mp4
+*.mp4
 
 # images folder
 images/
