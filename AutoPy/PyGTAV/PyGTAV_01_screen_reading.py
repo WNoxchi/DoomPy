@@ -14,7 +14,8 @@ import time
 
 last_time = time.time()
 while(True):
-    printscreen_pil = ImageGrab.grab(bbox=(0,280,800, 880)) # x1,y1, x2,y2
+    # printscreen_pil = ImageGrab.grab(bbox=(0,280,800, 880)) # x1,y1, x2,y2
+    printscreen_pil = ImageGrab.grab(bbox=(5, 20, 1285, 740))
     # printscreen_numpy = np.array(printscreen_pil.getdata(), dtype='uint8')\
     #             .reshape((printscreen_pil.size[1], printscreen_pil.size[0], 4)) # last arg is shape: need 4 for png (RGBA)
     print('Loop toop {} seconds'.format(time.time()-last_time))
