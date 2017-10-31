@@ -7,12 +7,13 @@ from sys import exit, stdout
 from os import getcwd; from os.path import expanduser
 from os import mkdir; from os.path import exists
 from PIL.ImageGrab import grab # NOTE: only Win & OSX at this time
+from glob import glob
 
 dpath = 'demdata/'
 TIME = None
-INTERVAL = 1.0  # seems my code cant save faster than every 3.3 seconds yet..
-FORMAT = 'png' # unsure .png or .jpg yet
-# FORMAT = 'jpg'
+INTERVAL = 0.5  # seems my code cant save faster than every 3.3 seconds yet..
+# FORMAT = 'png' # unsure .png or .jpg yet
+FORMAT = 'jpg'
 if not exists(dpath): mkdir(dpath)
 
 # get time to record from user
@@ -42,23 +43,24 @@ print("Beginning Screen Capture\n{:<15}{}\n{:<15}{:<5}seconds\n{:<15}{:<5}second
 # another way to do the screen cap loop:
 t_start = time()
 t_stop = t_start
-n_img = 0
-print(t_start)
-while t_stop - t_start < TIME:
-    # update progress message
-    n_img += 1
-    stdout.write("\r")
-    stdout.write("Capturing Image: {:<5}".format(n_img)); stdout.flush()
-    # capture screenshot
-    if FORMAT == 'jpg':
-        grab().convert("RGB").save(dpath+'img_{:0=4d}.jpg'.format(n_img))
-    else:
-        grab().save(dpath+'img_{:0=4d}.png'.format(n_img))
-    # enforce a maximum save rate
-    if time() - t_stop < INTERVAL: sleep(INTERVAL)
-    t_stop = time()
+# start index at last numbered image in data folder
+n_img = int(max(glob(dpath+'*')[:-8:-4])[-8:-4]) if glob(dpath+'*') else 0
+n_init = n_img
+# while t_stop - t_start < TIME:
+#     # update progress message
+#     n_img += 1
+#     stdout.write("\r")
+#     stdout.write("Capturing Image: {:<5}".format(n_img)); stdout.flush()
+#     # capture screenshot
+#     if FORMAT == 'jpg':
+#         grab().convert("RGB").save(dpath+'img_{:0=4d}.jpg'.format(n_img))
+#     else:
+#         grab().save(dpath+'img_{:0=4d}.png'.format(n_img))
+#     # enforce a maximum save rate
+#     if time() - t_stop < INTERVAL: sleep(INTERVAL)
+#     t_stop = time()
 
-print("Screen Capture Complete. {} files saved to: {}".format(n_img,
+print("Screen Capture Complete. {} files saved to: {}".format(n_img-n_init,
         expanduser(getcwd())+'/'+dpath))
 
 # ORIGINAL SAVE LOOP ###########################################################
