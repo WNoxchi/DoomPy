@@ -46,19 +46,19 @@ t_stop = t_start
 # start index at last numbered image in data folder
 n_img = int(max(glob(dpath+'*')[:-8:-4])[-8:-4]) if glob(dpath+'*') else 0
 n_init = n_img
-# while t_stop - t_start < TIME:
-#     # update progress message
-#     n_img += 1
-#     stdout.write("\r")
-#     stdout.write("Capturing Image: {:<5}".format(n_img)); stdout.flush()
-#     # capture screenshot
-#     if FORMAT == 'jpg':
-#         grab().convert("RGB").save(dpath+'img_{:0=4d}.jpg'.format(n_img))
-#     else:
-#         grab().save(dpath+'img_{:0=4d}.png'.format(n_img))
-#     # enforce a maximum save rate
-#     if time() - t_stop < INTERVAL: sleep(INTERVAL)
-#     t_stop = time()
+while t_stop - t_start < TIME:
+    # update progress message
+    n_img += 1
+    stdout.write("\r")
+    stdout.write("Capturing Image: {:<5}".format(n_img)); stdout.flush()
+    # capture screenshot
+    if FORMAT == 'jpg':
+        grab().convert("RGB").save(dpath+'img_{:0=4d}.jpg'.format(n_img))
+    else:
+        grab().save(dpath+'img_{:0=4d}.png'.format(n_img))
+    # enforce a maximum save rate
+    if time() - t_stop < INTERVAL: sleep(INTERVAL)
+    t_stop = time()
 
 print("Screen Capture Complete. {} files saved to: {}".format(n_img-n_init,
         expanduser(getcwd())+'/'+dpath))
