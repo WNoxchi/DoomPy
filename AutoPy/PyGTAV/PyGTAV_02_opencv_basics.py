@@ -17,14 +17,13 @@ from sys import platform # checking OS for resolution
 # OS check for propper resolution
 if platform[:3] == 'win':
     bbox = (5, 20, 1085, 740)
-    # found okay-ish values for DOOM 2016:
     thresh1=100
     thresh2=400
 
 else:
     bbox = (0,280,800, 880)
-    thresh1=100
-    thresh2=400
+    thresh1=200
+    thresh2=300
 
 def process_img(original_image):
     # convert to gray
