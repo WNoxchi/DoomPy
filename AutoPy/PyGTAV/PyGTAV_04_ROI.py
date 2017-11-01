@@ -38,6 +38,13 @@ def process_img(image):
 def main():
     last_time = time.time()
     while(True):
-        screen = np.array(ImageGrab.grab(bbox=bbox)
+        screen = np.array(ImageGrab.grab(bbox=bbox))
         new_screen = process_img(screen)
         print("Loop took {} seconds".format(time.time - last_Time))
+        last_time = time.time()
+        cv2.imshow('AUTOPY', new_screen)
+        if cv2.waitKey(25) & 0xFF == ord('q'):
+            cv2.destroyAllWindows()
+            break
+
+main()
