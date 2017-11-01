@@ -12,6 +12,13 @@ import numpy as np
 from PIL import ImageGrab
 import cv2
 import time
+from sys import platform # checking OS for resolution
+
+# OS check for propper resolution
+if platform[:3] == 'win':
+    bbox = (5, 20, 1085, 740)
+else:
+    bbox = (0,280,800, 880)
 
 def process_img(original_image):
     # convert to gray
@@ -23,7 +30,7 @@ def process_img(original_image):
 last_time = time.time()
 while(True):
     last_time = time.time()
-    screen = np.array(ImageGrab.grab(bbox=(0,280,800, 880))) # x1,y1, x2,y2; WNXG750:bbox=(5, 20, 1085, 740)
+    screen = np.array(ImageGrab.grab(bbox=bbox)) # x1,y1, x2,y2; WNXG750:bbox=(5, 20, 1085, 740)
 
     new_screen = process_img(screen)
     print('Loop took {} seconds'.format(time.time()-last_time))
