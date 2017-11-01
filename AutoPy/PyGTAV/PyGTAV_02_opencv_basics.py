@@ -17,8 +17,8 @@ from sys import platform # checking OS for resolution
 # OS check for propper resolution
 if platform[:3] == 'win':
     bbox = (5, 20, 1085, 740)
-    thresh1=100
-    thresh2=400
+    thresh1=50
+    thresh2=90
 
 else:
     bbox = (0,280,800, 880)
