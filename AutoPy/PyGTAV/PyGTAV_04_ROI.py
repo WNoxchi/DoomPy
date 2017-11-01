@@ -22,6 +22,8 @@ for i in range(len(vertices)):
     vertices[i][0] += offst[0]
     vertices[i][1] += offst[1]
 bbox = (0+offst[0], 0+offst[1], res[0]+offst[0], res[1]+offst[1])
+thresh = [140, 200]
+
 
 def roi(img, vertices):
     mask = np.zeros_like(img) # Return an array of zeros with the same shape and type as a given array.
@@ -31,7 +33,7 @@ def roi(img, vertices):
 
 def process_img(image):
     processed_img = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    processed_img = cv2.Canny(processed_img, threshold1=200, threshold2=300)
+    processed_img = cv2.Canny(processed_img, threshold1=thresh[0], threshold2=thresh[1])
     processed_img = roi(processed_img, [vertices])
     return processed_img
 
@@ -40,7 +42,7 @@ def main():
     while(True):
         screen = np.array(ImageGrab.grab(bbox=bbox))
         new_screen = process_img(screen)
-        print("Loop took {} seconds".format(time.time - last_Time))
+        print("Loop took {} seconds".format(time.time() - last_time))
         last_time = time.time()
         cv2.imshow('AUTOPY', new_screen)
         if cv2.waitKey(25) & 0xFF == ord('q'):
