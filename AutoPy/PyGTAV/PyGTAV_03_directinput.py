@@ -34,10 +34,10 @@ for i in list(range(4))[::-1]:
     time.sleep(1)
 
 # enter key presses to game
-print('down')
-PressKey(D)
-time.sleep(3)
-ReleaseKey(D)
 print('up')
 PressKey(W)
+time.sleep(3)
 ReleaseKey(W)
+print('down')
+PressKey(S)
+ReleaseKey(S)
