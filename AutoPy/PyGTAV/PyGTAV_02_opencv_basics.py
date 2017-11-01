@@ -17,14 +17,19 @@ from sys import platform # checking OS for resolution
 # OS check for propper resolution
 if platform[:3] == 'win':
     bbox = (5, 20, 1085, 740)
+    thresh1=100
+    thresh2=300
+
 else:
     bbox = (0,280,800, 880)
+    thresh1=200
+    thresh2=300
 
 def process_img(original_image):
     # convert to gray
     processed_img = cv2.cvtColor(original_image, cv2.COLOR_BGR2GRAY)
     # edge detection
-    processed_img = cv2.Canny(processed_img, threshold1=200, threshold2=300)
+    processed_img = cv2.Canny(processed_img, threshold1=thresh1, threshold2=thresh2)
     return processed_img
 
 last_time = time.time()
