@@ -14,14 +14,14 @@ import time
 
 last_time = time.time()
 while(True):
-    # printscreen_pil = ImageGrab.grab(bbox=(0,280,800, 880)) # x1,y1, x2,y2
-    printscreen_pil = ImageGrab.grab(bbox=(5, 20, 1085, 740))
-    # printscreen_numpy = np.array(printscreen_pil.getdata(), dtype='uint8')\
-    #             .reshape((printscreen_pil.size[1], printscreen_pil.size[0], 4)) # last arg is shape: need 4 for png (RGBA)
+    screen = np.array(ImageGrab.grab(bbox=(0,280,800, 880))) # x1,y1, x2,y2     # <- still works w/o np.array() but
+    # screen = ImageGrab.grab(bbox=(5, 20, 1085, 740))                          # further operations (gray, edges) need
+    # printscreen_numpy = np.array(screen.getdata(), dtype='uint8')\
+    #             .reshape((screen.size[1], screen.size[0], 4)) # last arg is shape: need 4 for png (RGBA)
     print('Loop toop {} seconds'.format(time.time()-last_time))
     last_time = time.time()
     # cv2.imshow('window', printscreen_numpy)                                     # 3 for jpg (RGB)
-    cv2.imshow('window', np.array(printscreen_pil))
+    cv2.imshow('window', cv2.cvtColor(np.array(screen), cv2.COLOR_BGR2RGB))
     if cv2.waitKey(25) & 0xFF == ord('q'):
         cv2.destroyAllWindows()
         break
