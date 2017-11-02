@@ -11,7 +11,8 @@ import numpy as np
 from PIL import ImageGrab
 import cv2
 import time
-from directkeys import ReleaseKey, PressKey, W, A, S, D
+from directkeys import ReleaseKey, PressKey, W, A, S, D # NOTE: directX input is Windows only
+import pyautogui # <-- solves oversized window issues on some monitors
 
 # ETS2 gfx: 1280x768
 res = [1280,768]    # game resolution
