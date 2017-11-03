@@ -11,7 +11,7 @@ import numpy as np
 from PIL import ImageGrab
 import cv2
 import time
-import pyautogui # <-- solves oversized window issues on some monitors
+# import pyautogui # <-- solves oversized window issues on some monitors ## didn't notice effect
 from sys import platform
 
 # Platform-specific window & roi:
@@ -33,9 +33,9 @@ else:
     # proportions = [1600/1280,900/768]
     offst = [0, 280]
     # region of interest
-    vertices = np.array([[   0,  878],[   0,  508],[ 398,  373],[1202,  373],[1598,  508],[1598,  878]])
+    # vertices = np.array([[   0,  878],[   0,  508],[ 398,  373],[1202,  373],[1598,  508],[1598,  878]])
     # (debug) full window
-    # vertices = np.array([[0,res[1]],[0,0],[res[0],0],[res[0],res[1]]])
+    vertices = np.array([[0,res[1]],[0,0],[res[0],0],[res[0],res[1]]])
 
 bbox = (0+offst[0], 0+offst[1], res[0]+offst[0], res[1]+offst[1])
 # thresh = [110, 160] # orig: 140,200
@@ -69,7 +69,9 @@ def process_img(image):
 
     # processed_img is the edges; (edges, rho, theta, threshold, minLineLen, maxLineGap)
     # returns: array of arrays that contain the lines
-    lines = cv2.HoughLinesP(processed_img, 1, np.pi/180, 180, 20, 15)
+    # NOTE: 3rd from last arg `np.array([])` needed for the linelen & gaplen
+    #       pars to be used
+    lines = cv2.HoughLinesP(processed_img, 1, np.pi/180, 180, np.array([]), 100, 5)
     draw_lines(processed_img, lines)
     return processed_img
 
