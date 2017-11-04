@@ -212,6 +212,7 @@ while True:
 
     # super-basic prelim AI
     if platform[:3] == 'win':
+        print(m1, m2)
         # if both lines on a side (same slope) turn
         if m1 < 0 and m2 < 0:
             print("TURN RIGHT")
