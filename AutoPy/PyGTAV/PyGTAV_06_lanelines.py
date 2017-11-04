@@ -208,12 +208,13 @@ last_time = time.time()
 while True:
     screen = np.array(ImageGrab.grab(bbox=bbox))
     ttime = time.time() - last_time
-    print("Frame took {} seconds. FPS: {}".format(ttime, 1./ttime))
+    print("Frame took {} seconds. FPS: {}\n".format(ttime, 1./ttime))
     last_time = time.time()
     new_screen, original_image = process_img(screen)
 
-    original_image = cv2.resize(screen, None, fx=0.3, fy=0.3)
-    new_screen = cv2.resize(new_screen, None, fx=0.3, fy=0.3)
+    if platform[:3] == 'dar':
+        original_image = cv2.resize(screen, None, fx=0.3, fy=0.3)
+        new_screen = cv2.resize(new_screen, None, fx=0.3, fy=0.3)
 
     cv2.imshow('window', new_screen)
     cv2.imshow('window2', cv2.cvtColor(original_image, cv2.COLOR_BGR2GRAY))
