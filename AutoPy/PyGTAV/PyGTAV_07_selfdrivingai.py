@@ -179,7 +179,7 @@ def right():
     ReleaseKey(A)
     ReleaseKey(W)
     # ReleaseKey(D)
-def back():
+def brake():
     PressKey(S)
     ReleaseKey(A)
     ReleaseKey(D)
@@ -212,15 +212,20 @@ while True:
 
     # super-basic prelim AI
     if platform[:3] == 'win':
+        # if both lines on a side (same slope) turn
         if m1 < 0 and m2 < 0:
             print("TURN RIGHT")
             right()
         elif m1 > 0 and m2 > 0:
             print("TURN LEFT")
             left()
-        else:
+        # if slope steep enough, accel; otws brake
+        elif abs(m1) > 0.3 and abs(m2) > 0.3:
             print("PRESS GAS")
             straight()
+        else:
+            print("PRESS BRAKE")
+            brake()
 
     if cv2.waitKey(25) & 0xFF == ord('q'):
         cv2.destroyAllWindows()
