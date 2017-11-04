@@ -123,8 +123,8 @@ def draw_lanes(img, lines, color=[0,255,255], thickness=3):
 
         l1_x1, l1_y1, l1_x2, l1_y2 = average_lane(final_lanes[lane1_id])
         l2_x1, l2_y1, l2_x2, l2_y2 = average_lane(final_lanes[lane2_id])
-
-        return [l1_x1, l1_y1, l1_x2, l1_y2], [l2_x1, l2_y1, l2_x2, l2_y2]
+        # return lanes and slopes
+        return [l1_x1, l1_y1, l1_x2, l1_y2], [l2_x1, l2_y1, l2_x2, l2_y2], lane1_id, lane2_id
 
     except Exception as e:
         print(str(e), "in draw_lines: block 51-130")
@@ -140,13 +140,14 @@ def process_img(image, vertices=vertices, thresh=thresh):
     # more info: http://docs.opencv.org/3.0-beta/doc/py_tutorials/py_imgproc/py_houghlines/py_houghlines.html
     # (image, rho, theta, thresh, minlen, maxgap)
     lines = cv2.HoughLinesP(processed_img, 1, np.pi/180, thresh[2], 20, 15)
-
+    m1, m2 = 0, 0   # defaults
     try:
-        l1, l2 = draw_lanes(original_image, lines)
+        l1, l2, m1, m2 = draw_lanes(original_image, lines)
         cv2.line(original_image, (l1[0], l1[1]), (l1[2], l1[3]), [0,255,0], 30)
         cv2.line(original_image, (l2[0], l2[1]), (l2[2], l2[3]), [0,255,0], 30)
     except Exception as e:
         print(str(e), "in process_img: block 143-148")
+        pass
     try:
         for coords in lines:
             coords = coords[0]
@@ -155,10 +156,34 @@ def process_img(image, vertices=vertices, thresh=thresh):
             except Exception as e:
                 print(str(e), "in process_img: block 152-155")
     except Exception as e:
-        print(str(e), "in process_img: block 149-157")
+        print(str(e), "in process_img: block 149-159")
         pass
 
-    return processed_img, original_image
+    return processed_img, original_image, m1, m2
+
+# preliminary commands
+def straight():
+    PressKey(W)
+    ReleaseKey(A)
+    ReleaseKey(D)
+def left():
+    PressKey(A)
+    ReleaseKey(W)
+    ReleaseKey(D)
+def right():
+    PressKey(D)
+    ReleaseKey(A)
+    ReleaseKey(W)
+def back():
+    PressKey(S)
+    ReleaseKey(A)
+    ReleaseKey(D)
+    ReleaseKey(W)
+
+# simple countdown
+for i in list(range(4))[::-1]:
+    print(i+1)
+    time.sleep(1)
 
 last_time = time.time()
 while True:
@@ -167,7 +192,7 @@ while True:
     print("Frame took {} seconds. FPS: {}".format(λtime, 1./λtime))
     last_time = time.time()
 
-    new_screen, original_image = process_img(screen, vertices, thresh)
+    new_screen, original_image, m1, m2 = process_img(screen, vertices, thresh)
     # new_screen, original_image = process_img(screen)
 
     if platform[:3] == 'dar':
@@ -177,8 +202,16 @@ while True:
         original_image = cv2.resize(screen, None, fx=0.6, fy=0.6)
         new_screen = cv2.resize(new_screen, None, fx=0.6, fy=0.6)
 
-    cv2.imshow('Edges (\'q\' to quit)', new_screen)
+    # cv2.imshow('Edges (\'q\' to quit)', new_screen)
     cv2.imshow('Lane Lines (\'q\' to quit)', cv2.cvtColor(original_image, cv2.COLOR_BGR2RGB))
+
+    # super-basic prelim AI
+    if m1 < 0 and m2 < 0:
+        right()
+    elif m1 > 0 and m2 > 0:
+        left()
+    else:
+        straight()
 
     if cv2.waitKey(25) & 0xFF == ord('q'):
         cv2.destroyAllWindows()
