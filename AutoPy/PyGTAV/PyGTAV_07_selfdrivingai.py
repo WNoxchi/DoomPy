@@ -226,6 +226,7 @@ while True:
         else:
             # print("PRESS BRAKE")
             # brake()
+            pass
 
     if cv2.waitKey(25) & 0xFF == ord('q'):
         cv2.destroyAllWindows()
