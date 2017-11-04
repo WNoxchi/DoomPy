@@ -7,6 +7,8 @@ from numpy.linalg import lstsq
 # from directkeys import PressKey, W, A, S, D
 from statistics import mean
 
+from sys import platform
+
 def roi(img, vertices):
 
     #blank mask:
@@ -118,10 +120,16 @@ def process_img(image):
 
     processed_img = cv2.GaussianBlur(processed_img,(5,5),0)
 
-
-    res = [1600,900]
-    offst = [0, 280]
-    vertices = np.array([[0,res[1]],[0,0],[res[0],0],[res[0],res[1]]], np.int32)
+    if platform[:3] == 'dar':
+        res = [1600,900]
+        offst = [0, 280]
+        vertices = np.array([[0,res[1]],[0,0],[res[0],0],[res[0],res[1]]], np.int32)
+    else:
+        # res = [1280,768]
+        # offst = [8, 30]
+        res = [1024,768]
+        offst = [8,96]
+        vertices = np.array([[0,res[1]],[0,0],[res[0],0],[res[0],res[1]]], np.int32)
 
     processed_img = roi(processed_img, [vertices])
 
@@ -154,13 +162,18 @@ def process_img(image):
 def main():
     last_time = time.time()
     while True:
-        screen =  np.array(ImageGrab.grab(bbox=(0,40,800,640)))
+        # screen =  np.array(ImageGrab.grab(bbox=(0,40,800,640)))
+        screen =  np.array(ImageGrab.grab(bbox=(8, 96, 1032, 768)))
         print('Frame took {} seconds'.format(time.time()-last_time))
         last_time = time.time()
         new_screen,original_image = process_img(screen)
 
-        new_screen = cv2.resize(new_screen, None, fx=0.3, fy=0.3)
-        original_image = cv2.resize(original_image, None, fx=0.3, fy=0.3)
+        if platform[:3] == 'win':
+            new_screen = cv2.resize(new_screen, None, fx=0.6, fy=0.6)
+            original_image = cv2.resize(original_image, None, fx=0.6, fy=0.6)
+        else:
+            new_screen = cv2.resize(new_screen, None, fx=0.3, fy=0.3)
+            original_image = cv2.resize(original_image, None, fx=0.3, fy=0.3)
 
         cv2.imshow('window', new_screen)
         cv2.imshow('window2',cv2.cvtColor(original_image, cv2.COLOR_BGR2RGB))

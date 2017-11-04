@@ -23,10 +23,16 @@ if platform[:3] == 'win':   # could also wrap this in a try except AttributeErro
 
 if platform[:3] == 'win':
     # ETS2 Win gfx: 1280x768
-    res = [1280,768]    # game resolution
-    offst = [8,30]      # window border offsets x: 8, y: 30
+    # res = [1280,768]    # game resolution
+    res = [1024,638]
+    # res = [1024,768]
+    # offst = [8,30]      # window border offsets x: 8, y: 30
+    offst = [8,96]
     # region of interest drawn over screenshot in paint
-    vertices = np.array([[0,767],[0,444],[319,326],[962,326],[1279,444],[1279,767]])
+    # vertices = np.array([[0,767],[0,444],[319,326],[962,326],[1279,444],[1279,767]])
+    vertices = np.array([[0,637],[0,369],[255,271],[770,271],[1023,369],[1023,637]])
+    # (debug) full window
+    # vertices = np.array([[0,res[1]],[0,0],[res[0],0],[res[0],res[1]]])
     for i in range(len(vertices)):
         vertices[i][0] += offst[0]
         vertices[i][1] += offst[1]
@@ -41,6 +47,8 @@ else:
     vertices = np.array([[0,res[1]],[0,0],[res[0],0],[res[0],res[1]]])
 
 bbox = (0+offst[0], 0+offst[1], res[0]+offst[0], res[1]+offst[1])
+thresh = [200,300,180] # threshold: [Canny1, Canny2, Hough]
+# thresh = [150,300, 180] # works well at night
 
 
 def roi(img, vertices):
@@ -64,7 +72,7 @@ def draw_lanes(img, lines, color=[0, 255, 255], thickness=3):
             for ii in i:
                 ys += [ii[1],ii[3]]
         min_y = min(ys) # highest point
-        max_y = max(ys) # lowest point
+        max_y = res[1]+offst[1] # lowest point
         # new_lines = []
         line_dict = {}
 
@@ -82,17 +90,19 @@ def draw_lanes(img, lines, color=[0, 255, 255], thickness=3):
                 # m = 0.1 if m == 0 else m
 
                 # Calculating our new and improved xs
-                # NOTE: getting div zero errors; little patch:
                 # m = 0.01 if m == 0 else m
                 x1 = (min_y-b)/m
                 x2 = (max_y-b)/m
 
+                # store the slope, bias, x & y vals for each line to a dict
                 line_dict[idx] = [m,b,[int(x1),min_y, int(x2),max_y]]
                 # new_lines.append([int(x1), min_y, int(x2), max_y])
                 # print('line_dict: ', line_dict)
 
         final_lanes = {}
 
+        # iterate through the line_dict, for the line_dict: check for the slope,
+        # (want to find lines w/ similar slopes)
         for idx in line_dict:
             # print('line_dict index: ', idx)
             final_lanes_copy = final_lanes.copy()
@@ -109,8 +119,10 @@ def draw_lanes(img, lines, color=[0, 255, 255], thickness=3):
                 for other_ms in final_lanes_copy:
 
                     if not found_copy:
-                        if abs(other_ms*1.1) > abs(m) > abs(other_ms*0.9):
-                            if abs(final_lanes_copy[other_ms][0][1]*1.1) > abs(b) > abs(final_lanes_copy[other_ms][0][1]*0.9):
+                        # if slope & bias w/n tolerance: consider it as the same line & store as a line
+                        # NOTE: the 2 lanes we take are the 2 most common slopes
+                        if abs(other_ms*1.2) > abs(m) > abs(other_ms*0.8):
+                            if abs(final_lanes_copy[other_ms][0][1]*1.2) > abs(b) > abs(final_lanes_copy[other_ms][0][1]*0.8):
                                 final_lanes[other_ms].append([m,b,line])
                                 found_copy = True
                                 break
@@ -135,7 +147,7 @@ def draw_lanes(img, lines, color=[0, 255, 255], thickness=3):
         # print('lane1_id: ', lane1_id)
         # print('lane2_id: ', lane2_id)
 
-
+        # take an average of the lanes found & make them lanes 1 & 2
         def average_lane(lane_data):
             # print('lane_data:', lane_data)
             x1s = []
@@ -172,12 +184,12 @@ def draw_lanes(img, lines, color=[0, 255, 255], thickness=3):
     except Exception as e:
         print(str(e), 'in draw_lines: Line 59-168')
 
-def process_img(image, vertices=vertices):
+def process_img(image, vertices=vertices, thresh=thresh):
     original_image = image
     # convert to gray
     # processed_img = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY) ## No Need to cvt to Gray: Canny convrts
     # edge detection
-    processed_img = cv2.Canny(image, threshold1=200, threshold2=300)
+    processed_img = cv2.Canny(image, threshold1=thresh[0], threshold2=thresh[1])
 
     processed_img = cv2.GaussianBlur(processed_img,(5,5),0)
 
@@ -187,7 +199,8 @@ def process_img(image, vertices=vertices):
 
     # more info: http://docs.opencv.org/3.0-beta/doc/py_tutorials/py_imgproc/py_houghlines/py_houghlines.html
     #                                     rho   theta   thresh  min length, max gap:
-    lines = cv2.HoughLinesP(processed_img, 1, np.pi/180, 180, np.array([]), 20, 15)
+    # lines = cv2.HoughLinesP(processed_img, 1, np.pi/180, thresh[2], np.array([]), 20, 15)
+    lines = cv2.HoughLinesP(processed_img, 1, np.pi/180, 180,      20,       15)
     # print('lines = cv2.HoughLinesP(..) = ', lines)
     # print('num lines (HoughLP): ', len(lines))
     try:
@@ -214,7 +227,11 @@ def process_img(image, vertices=vertices):
 last_time = time.time()
 while True:
 # for i in range(3):
-    screen = np.array(ImageGrab.grab(bbox=bbox))
+    if platform[:3] == 'dar':
+        screen = np.array(ImageGrab.grab(bbox=bbox))
+    else:
+        # screen =  np.array(ImageGrab.grab(bbox=(0,40,800,640)))
+        screen = np.array(ImageGrab.grab(bbox=bbox))
     ttime = time.time() - last_time
     print("Frame took {} seconds. FPS: {}".format(ttime, 1./ttime))
     last_time = time.time()
@@ -223,6 +240,9 @@ while True:
     if platform[:3] == 'dar':
         original_image = cv2.resize(screen, None, fx=0.3, fy=0.3)
         new_screen = cv2.resize(new_screen, None, fx=0.3, fy=0.3)
+    else:
+        original_image = cv2.resize(screen, None, fx=0.6, fy=0.6)
+        new_screen = cv2.resize(new_screen, None, fx=0.6, fy=0.6)
 
     cv2.imshow('window', new_screen)
     # cv2.imshow('window2', original_image)
