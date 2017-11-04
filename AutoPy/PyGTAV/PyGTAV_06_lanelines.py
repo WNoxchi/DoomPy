@@ -2,7 +2,7 @@
 # https://www.youtube.com/watch?v=CAr7UupSUh0&list=PLQVvvaa0QuDeETZEOy4VdocT7TOjfSA8a&index=6
 # https://github.com/Sentdex/pygta5
 # ---------------------------------
-# WNixalo - 2017-Nov-03 15:05
+# WNixalo - 2017-Nov-03 15:05 - 2017-Nov-04 00:34
 # 06: Lane Finding
 # NOTE: using EuroTruck Simulator 2 & DOOM 2016
 ################################################################################
@@ -21,30 +21,32 @@ from sys import platform
 if platform[:3] == 'win':   # could also wrap this in a try except AttributeError
     from directkeys import ReleaseKey, PressKey, W, A, S, D
 
+# Windows
 if platform[:3] == 'win':
     # ETS2 Win gfx: 1280x768
     # res = [1280,768]    # game resolution
-    res = [1024,638]
+    res = [1024,638]    # Changed game res to 1024x768... for some reason this w/ the new offset are what worked.
     # res = [1024,768]
     # offst = [8,30]      # window border offsets x: 8, y: 30
-    offst = [8,96]
+    offst = [8,96]  # offset for 1024x768 res
     # region of interest drawn over screenshot in paint
     # vertices = np.array([[0,767],[0,444],[319,326],[962,326],[1279,444],[1279,767]])
-    vertices = np.array([[0,637],[0,369],[255,271],[770,271],[1023,369],[1023,637]])
+    vertices = np.array([[0,637],[0,369],[255,271],[770,271],[1023,369],[1023,637]])    # same proportions but for 1024x768 res
     # (debug) full window
     # vertices = np.array([[0,res[1]],[0,0],[res[0],0],[res[0],res[1]]])
     for i in range(len(vertices)):
         vertices[i][0] += offst[0]
         vertices[i][1] += offst[1]
+# Mac/Linux
 else:
     # YouTube box on Retina MacOS
     res = [1600,900]
     # proportions = [1600/1280,900/768]
     offst = [0, 280]
     # region of interest
-    # vertices = np.array([[   0,  878],[   0,  508],[ 398,  373],[1202,  373],[1598,  508],[1598,  878]])
+    vertices = np.array([[   0,  878],[   0,  508],[ 398,  373],[1202,  373],[1598,  508],[1598,  878]])
     # (debug) full window
-    vertices = np.array([[0,res[1]],[0,0],[res[0],0],[res[0],res[1]]])
+    # vertices = np.array([[0,res[1]],[0,0],[res[0],0],[res[0],res[1]]])
 
 bbox = (0+offst[0], 0+offst[1], res[0]+offst[0], res[1]+offst[1])
 thresh = [200,300,180] # threshold: [Canny1, Canny2, Hough]
@@ -226,7 +228,7 @@ def process_img(image, vertices=vertices, thresh=thresh):
 
 last_time = time.time()
 while True:
-# for i in range(3):
+    # for i in range(3):
     if platform[:3] == 'dar':
         screen = np.array(ImageGrab.grab(bbox=bbox))
     else:
