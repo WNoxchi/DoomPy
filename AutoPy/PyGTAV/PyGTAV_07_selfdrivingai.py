@@ -194,7 +194,7 @@ last_time = time.time()
 while True:
     screen = np.array(ImageGrab.grab(bbox=bbox))
     λtime = time.time() - last_time
-    # print("Frame: {} seconds. FPS: {}".format(λtime, 1./λtime))
+    print("Frame: {} seconds. FPS: {}".format(λtime, 1./λtime))
     last_time = time.time()
 
     new_screen, original_image, m1, m2 = process_img(screen, vertices, thresh)
@@ -211,15 +211,16 @@ while True:
     cv2.imshow('Lane Lines (\'q\' to quit)', cv2.cvtColor(original_image, cv2.COLOR_BGR2RGB))
 
     # super-basic prelim AI
-    if m1 < 0 and m2 < 0:
-        print("TURN RIGHT")
-        right()
-    elif m1 > 0 and m2 > 0:
-        print("TURN LEFT")
-        left()
-    else:
-        print("PRESS GAS")
-        straight()
+    if platform[:3] == 'win':
+        if m1 < 0 and m2 < 0:
+            print("TURN RIGHT")
+            right()
+        elif m1 > 0 and m2 > 0:
+            print("TURN LEFT")
+            left()
+        else:
+            print("PRESS GAS")
+            straight()
 
     if cv2.waitKey(25) & 0xFF == ord('q'):
         cv2.destroyAllWindows()
