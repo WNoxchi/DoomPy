@@ -46,7 +46,7 @@ def roi(img, vertices):
 
 def draw_lanes(img, lines, color=[0,255,255], thickness=3):
     # tolerance for grouping lines
-    TOL = 0.2
+    TOL = 0.4
     # if this fails go w/ some default line
     try:
         # finds max y val for lane marker (cant assume horzn always at same pt)
