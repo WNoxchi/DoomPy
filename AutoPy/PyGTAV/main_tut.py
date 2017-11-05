@@ -6,13 +6,16 @@
 # 09: Neural Network Training Data for Self-Driving
 # NOTE: using EuroTruck Simulator 2 & DOOM 2016
 #       This code only compatible w/ MS Windows
+# To get this to work I had to install pywin32 Build 221 from https://sourceforge.net/projects/pywin32/files/pywin32/
+# and run the .exe as admin. pip installing the .whl file from https://www.lfd.uci.edu/~gohlke/pythonlibs/#pywin32
+# did not work. -- couldn't get the post-install script working. (Win8.1)
 ################################################################################
 
 # Add paths to utility folders:
 from sys import path as syspath
 from os import path as ospath; from os import getcwd
-syspath.insert(1, ospath.join(getcwd() + '1-7_code/'))
-syspath.insert(1, ospath.join(getcwd() + '8-13_code/'))
+syspath.insert(1, ospath.join(getcwd() + '/1-7_code/'))
+syspath.insert(1, ospath.join(getcwd() + '/8-13_code/'))
 
 import numpy as np
 import cv2
@@ -20,7 +23,7 @@ import time
 from directkeys import PressKey,ReleaseKey, W, A, S, D
 from draw_lanes import draw_lanes
 from grabscreen import grab_screen
-from getkeys import key_press
+from getkeys import key_check
 import os
 
 # convert pressed keys to one-hot array
