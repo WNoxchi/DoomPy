@@ -36,7 +36,7 @@ def keys_to_output(keys):
         output[2] = 1
     return output
 
-file_name = 'training_data_
+file_name = 'training_data.npy'
 
 last_time = time.time()
 while True:
