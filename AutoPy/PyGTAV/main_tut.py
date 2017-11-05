@@ -72,7 +72,7 @@ def main():
         last_time = time.time()
 
         if len(training_data) % 500 == 0:
-            print(len(training_data)):
+            print(len(training_data))
             np.save(file_dir+file_name, training_data)
 
 if __name__ == "__main__":
