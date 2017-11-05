@@ -33,7 +33,7 @@ for data in train_data:
     # populate action arrays w/ appropriate data examples
     if choice == [1,0,0]:
         lefts.append([img, choice])
-    elif choice == [1,1,0]:
+    elif choice == [0,1,0]:
         forwards.append([img, choice])
     elif choice == [0,0,1]:
         rights.append([img, choice])
