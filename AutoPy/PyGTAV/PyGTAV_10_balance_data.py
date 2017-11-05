@@ -83,4 +83,8 @@ np.save(data_dir+'training_data_v2.npy', final_data)
 # 3  [[23, 24, 6, 6, 13, 15, 16, 14, 4, 6, 6, 7, 7,...  [0, 1, 0]
 # 4  [[23, 24, 6, 6, 13, 15, 16, 14, 4, 6, 6, 7, 7,...  [0, 1, 0]
 # Counter({'[0, 1, 0]': 3574, '[0, 0, 1]': 625, '[1, 0, 0]': 301})
-# 756
+# 912
+#
+# (DoomPy) C:\Users\Wayne\DoomPy\AutoPy\PyGTAV>
+# 
+# more or less evenly distributed .... I think..
