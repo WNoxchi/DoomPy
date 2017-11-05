@@ -42,8 +42,8 @@ for data in train_data:
 
 # ensure action arrays of same len
 forwards = forwards[:len(lefts)][:len(rights)]  # will slice forwards up to len of shortest array
-lefts    = lefts[:len(forwards)][:len(rights)]
-rights   = rights[:len(forwards)][:len(lefts)]
+lefts    = lefts[:len(forwards)]#[:len(rights)]
+rights   = rights[:len(forwards)]#[:len(lefts)]
 
 final_data = forwards + lefts + rights
 
