@@ -9,6 +9,9 @@
 # To get this to work I had to install pywin32 Build 221 from https://sourceforge.net/projects/pywin32/files/pywin32/
 # and run the .exe as admin. pip installing the .whl file from https://www.lfd.uci.edu/~gohlke/pythonlibs/#pywin32
 # did not work. -- couldn't get the post-install script working. (Win8.1)
+#
+# Using pywin32 in grab_screen gives a huge speedup, although idk if pillow-simd
+# would as well.
 ################################################################################
 
 # Add paths to utility folders:
@@ -39,7 +42,18 @@ def keys_to_output(keys):
         output[2] = 1
     return output
 
+file_dir = 'train/'
 file_name = 'training_data.npy'
+if not os.path.exists(file_dir):
+    os.mkdir(file_dir)
+
+if os.path.isfile(file_dir+file_name):
+    print("File exists. Loading data.")
+    training_data = list(np.load(file_dir+file_name))    # this would be faster in pure NumPy
+else:
+    print("File does not exist. Starting new data set.")
+    training_data = []
+
 
 def main():
     for i in list(range(4))[::-1]:
@@ -47,9 +61,19 @@ def main():
         time.sleep(1)
     last_time = time.time()
     while True:
-        screen = grab_screen(region=(0,40,800,640))
+        # region is bbox from PyGTAV_07_selfdrivingai.py
+        screen = grab_screen(region=(8, 96, 1032, 734)) # (0,40,800,640)
+        screen = cv2.cvtColor(screen, cv2.COLOR_BGR2GRAY)
+        screen = cv2.resize(screen, (102, 64)) # roughly 0.1 scale
+        keys = key_check()
+        output = keys_to_output(keys)
+        training_data.append([screen, output])
         print('Frame took {} seconds'.format(time.time()-last_time))
         last_time = time.time()
+
+        if len(training_data) % 500 == 0:
+            print(len(training_data)):
+            np.save(file_dir+file_name, training_data)
 
 if __name__ == "__main__":
     main()
