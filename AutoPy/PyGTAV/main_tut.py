@@ -41,11 +41,12 @@ def keys_to_output(keys):
 
 file_name = 'training_data.npy'
 
-last_time = time.time()
-while True:
+def main():
     for i in list(range(4))[::-1]:
         print(i+1)
         time.sleep(1)
-    screen = grab_screen(region=(0,40,800,640))
-    print('Frame took {} seconds'.format(time.time()-last_time))
     last_time = time.time()
+    while True:
+        screen = grab_screen(region=(0,40,800,640))
+        print('Frame took {} seconds'.format(time.time()-last_time))
+        last_time = time.time()
