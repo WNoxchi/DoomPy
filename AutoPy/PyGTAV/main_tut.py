@@ -50,3 +50,6 @@ def main():
         screen = grab_screen(region=(0,40,800,640))
         print('Frame took {} seconds'.format(time.time()-last_time))
         last_time = time.time()
+
+if __name__ == "__main__":
+    main()
