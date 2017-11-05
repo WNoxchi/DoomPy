@@ -30,7 +30,7 @@ train_labels   = [i[1] for i in train]
 test_features = np.array([i[0] for i in test]).reshape(-1, WIDTH, HEIGHT, 1)
 test_labels   = [i[1] for i in test]
 
-model.fit({'input': train_features}, {'targets:' train_labels}, n_epochs=EPOCHS,
+model.fit({'input': train_features}, {'targets': train_labels}, n_epoch=EPOCHS,
             validation_set=({'input': test_features}, {'targets:' test_labels}),
             snapshot_step=500, show_metric=True, run_id=MODEL_NAME)
 
