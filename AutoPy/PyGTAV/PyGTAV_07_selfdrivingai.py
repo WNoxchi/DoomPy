@@ -67,6 +67,8 @@ def draw_lanes(img, lines, color=[0,255,255], thickness=3):
                 A = vstack([x_coords, ones(len(x_coords))]).T
                 m, b = lstsq(A, y_coords)[0]
 
+                m = 0.001 if m == 0 else m  # dealing w/ zero-slope errors
+
                 # Calculating new xs
                 x1 = (min_y - b) / m
                 x2 = (max_y - b) / m
@@ -146,7 +148,7 @@ def process_img(image, vertices=vertices, thresh=thresh):
         cv2.line(original_image, (l1[0], l1[1]), (l1[2], l1[3]), [0,255,0], 30)
         cv2.line(original_image, (l2[0], l2[1]), (l2[2], l2[3]), [0,255,0], 30)
     except Exception as e:
-        print(str(e), "in process_img: block 143-148")
+        # print(str(e), "in process_img: block 143-148")
         pass
     try:
         for coords in lines:
@@ -166,14 +168,17 @@ def straight():
     PressKey(W)
     ReleaseKey(A)
     ReleaseKey(D)
+    # ReleaseKey(W)
 def left():
     PressKey(A)
     ReleaseKey(W)
     ReleaseKey(D)
+    # ReleaseKey(A)
 def right():
     PressKey(D)
     ReleaseKey(A)
     ReleaseKey(W)
+    # ReleaseKey(D)
 def back():
     PressKey(S)
     ReleaseKey(A)
@@ -189,7 +194,7 @@ last_time = time.time()
 while True:
     screen = np.array(ImageGrab.grab(bbox=bbox))
     λtime = time.time() - last_time
-    print("Frame took {} seconds. FPS: {}".format(λtime, 1./λtime))
+    # print("Frame: {} seconds. FPS: {}".format(λtime, 1./λtime))
     last_time = time.time()
 
     new_screen, original_image, m1, m2 = process_img(screen, vertices, thresh)
@@ -202,15 +207,18 @@ while True:
         original_image = cv2.resize(screen, None, fx=0.6, fy=0.6)
         new_screen = cv2.resize(new_screen, None, fx=0.6, fy=0.6)
 
-    # cv2.imshow('Edges (\'q\' to quit)', new_screen)
+    cv2.imshow('Edges (\'q\' to quit)', new_screen)
     cv2.imshow('Lane Lines (\'q\' to quit)', cv2.cvtColor(original_image, cv2.COLOR_BGR2RGB))
 
     # super-basic prelim AI
     if m1 < 0 and m2 < 0:
+        print("TURN RIGHT")
         right()
     elif m1 > 0 and m2 > 0:
+        print("TURN LEFT")
         left()
     else:
+        print("PRESS GAS")
         straight()
 
     if cv2.waitKey(25) & 0xFF == ord('q'):
