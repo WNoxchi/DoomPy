@@ -11,11 +11,16 @@ import cv2
 data_dir   = 'train/'
 train_data = np.load(data_dir+'training_data.npy')
 
-for data in train_data:
-    img = data[0]
-    choice = data[1]
-    cv2.imshow('test', img)
-    print(choice)
-    if cv2.waitKey(25) & 0xFF == ord('q'):
-        cv2.destroyAllWindows()
-        break
+df = pd.DataFrame(train_data)
+print(df.head())
+# apply string to column 1, apply counter to string -- visualize data
+print(Counter(df[1].apply(str)))
+
+# for data in train_data:
+#     img = data[0]
+#     choice = data[1]
+#     cv2.imshow('test', img)
+#     print(choice)
+#     if cv2.waitKey(25) & 0xFF == ord('q'):
+#         cv2.destroyAllWindows()
+#         break
