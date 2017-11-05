@@ -4,6 +4,9 @@
 # images folder
 images/
 demdata/
+train/
+test/
+data/
 
 ########### PYTHON TEMPLATE ###########
 # Byte-compiled / optimized / DLL files
