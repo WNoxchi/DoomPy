@@ -11,10 +11,48 @@ import cv2
 data_dir   = 'train/'
 train_data = np.load(data_dir+'training_data.npy')
 
+print(len(train_data))
+
 df = pd.DataFrame(train_data)
 print(df.head())
 # apply string to column 1, apply counter to string -- visualize data
 print(Counter(df[1].apply(str)))
+
+
+# shuffling data to remove bias for specific actions
+lefts = []
+rights = []
+forwards = []
+
+shuffle(train_data)
+
+for data in train_data:
+    img = data[0]
+    choice = data[1]
+
+    # populate action arrays w/ appropriate data examples
+    if choice == [1,0,0]:
+        lefts.append([img, choice])
+    elif choice == [1,1,0]:
+        forwards.append([img, choice])
+    elif choice == [0,0,1]:
+        rights.append([img, choice])
+    else:
+        print("NO MATCH")
+
+# ensure action arrays of same len
+forwards = forwards[:len(lefts)][:len(rights)]  # will slice forwards up to len of shortest array
+lefts    = lefts[:len(forwards)][:len(rights)]
+rights   = rights[:len(forwards)][:len(lefts)]
+
+final_data = forwards + lefts + rights
+
+shuffle(final_data)
+print(len(final_data))
+np.save(data_dir+'training_data_v2.npy', final_data)
+
+
+
 
 # for data in train_data:
 #     img = data[0]
