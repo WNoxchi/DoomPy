@@ -19,7 +19,8 @@ MODEL_NAME = 'pygtav-car-{}-{}-{}-epochs.model'.format(LR, 'alexnet', EPOCHS)
 model = alexnet(WIDTH, HEIGHT, LR)
 
 train_dir = 'train/'
-train_data = np.load(train_dir+'training_data_v2.npy')
+model_dir = 'model/'
+train_data = np.load(train_dir+'training_data.npy')
 
 train = train_data[:-500]
 test  = train_data[-500:]
@@ -35,6 +36,6 @@ model.fit({'input': train_features}, {'targets': train_labels}, n_epoch=EPOCHS,
             validation_set=({'input': test_features}, {'targets': test_labels}),
             snapshot_step=500, show_metric=True, run_id=MODEL_NAME)
 
-# tesnorboard --logdir=foo:C:\Users\Wayne\DoomPy\AutoPy\PyGTAV\log
+# tensorboard --logdir=foo:C:\Users\Wayne\DoomPy\AutoPy\PyGTAV\log
 
-model.save(train_dir+MODEL_NAME)
+model.save(model_dir+MODEL_NAME)
