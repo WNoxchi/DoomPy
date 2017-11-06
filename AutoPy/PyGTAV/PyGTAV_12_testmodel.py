@@ -25,6 +25,7 @@ EPOCHS = 8
 MODEL_NAME = 'pygtav-car-{}-{}-{}-epochs.model'.format(LR, 'alexnet', EPOCHS)
 DIR = 'train/'
 
+t_time = 0.09
 def straight():
     PressKey(W)
     ReleaseKey(A)
@@ -32,15 +33,20 @@ def straight():
 def left():
     PressKey(A)
     PressKey(W)
-    # ReleaseKey(W)
     ReleaseKey(D)
-    # ReleaseKey(A)
+    time.sleep(t_time)
+    ReleaseKey(A)
 def right():
     PressKey(D)
     PressKey(W)
     ReleaseKey(A)
-    # ReleaseKey(W)
-    # ReleaseKey(D)
+    time.sleep(t_time)
+    ReleaseKey(D)
+def letgo():
+    ReleaseKey(W)
+    ReleaseKey(A)
+    ReleaseKey(S)
+    ReleaseKey(D)
 
 model = alexnet(WIDTH, HEIGHT, LR)
 model.load(DIR+MODEL_NAME)
@@ -89,7 +95,7 @@ def main():
             elif moves == [0,0,1]:
                 right()
             elif moves == [0,0,0]:
-                straight()
+                letgo()
 
         # for stopping program
         keys = key_check()
