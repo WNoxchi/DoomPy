@@ -43,14 +43,14 @@ def keys_to_output(keys):
         output[2] = 1
     return output
 
-file_dir = 'train/'
+train_dir = 'train/'
 file_name = 'training_data.npy'
-if not os.path.exists(file_dir):
-    os.mkdir(file_dir)
+if not os.path.exists(train_dir):
+    os.mkdir(train_dir)
 
-if os.path.isfile(file_dir+file_name):
+if os.path.isfile(train_dir+file_name):
     print("File exists. Loading data.")
-    training_data = list(np.load(file_dir+file_name))    # this would be faster in pure NumPy
+    training_data = list(np.load(train_dir+file_name))    # this would be faster in pure NumPy
 else:
     print("File does not exist. Starting new data set.")
     training_data = []
@@ -75,7 +75,7 @@ def main():
 
         if len(training_data) % 500 == 0:
             print(len(training_data))
-            np.save(file_dir+file_name, training_data)
+            np.save(train_dir+file_name, training_data)
 
 if __name__ == "__main__":
     main()
