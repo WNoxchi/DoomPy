@@ -39,7 +39,7 @@ def keys_to_output(keys):
         output[0] = 1
     elif 'W' in keys:
         output[1] = 1
-    elif: 'D' in keys:
+    elif 'D' in keys:
         output[2] = 1
     return output
 
