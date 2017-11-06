@@ -25,14 +25,16 @@ EPOCHS = 8
 MODEL_NAME = 'pygtav-car-{}-{}-{}-epochs.model'.format(LR, 'alexnet', EPOCHS)
 DIR = 'model/'
 
-turn_thresh = 0.65
-fwd_thresh  = 0.6
+turn_thresh = 0.55
+fwd_thresh  = 0.75
 t_time = 0.09
 
 def straight():
     PressKey(W)
     ReleaseKey(A)
     ReleaseKey(D)
+    time.sleep(t_time)
+    ReleaseKey(W)
 def left():
     PressKey(A)
     PressKey(W)
