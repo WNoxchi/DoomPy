@@ -23,7 +23,7 @@ HEIGHT = 64
 LR = 1e-3
 EPOCHS = 8
 MODEL_NAME = 'pygtav-car-{}-{}-{}-epochs.model'.format(LR, 'alexnet', EPOCHS)
-DIR = 'train/'
+DIR = 'model/'
 
 turn_thresh = 0.65
 fwd_thresh  = 0.6
