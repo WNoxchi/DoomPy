@@ -18,7 +18,8 @@ MODEL_NAME = 'pygtav-car-{}-{}-{}-epochs.model'.format(LR, 'alexnet', EPOCHS)
 
 model = alexnet(WIDTH, HEIGHT, LR)
 
-train_data = np.load('training_data_v2.npy')
+train_dir = 'train/'
+train_data = np.load(train_dir+'training_data_v2.npy')
 
 train = train_data[:-500]
 test  = train_data[-500:]
