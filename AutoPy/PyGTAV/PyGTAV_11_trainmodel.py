@@ -37,4 +37,4 @@ model.fit({'input': train_features}, {'targets': train_labels}, n_epoch=EPOCHS,
 
 # tesnorboard --logdir=foo:C:\Users\Wayne\DoomPy\AutoPy\PyGTAV\log
 
-model.save(MODEL_NAME)
+model.save(train_dir+MODEL_NAME)
