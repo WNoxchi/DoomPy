@@ -11,7 +11,7 @@ import numpy as np
 from alexnet import alexnet
 
 WIDTH = 102
-HEIGHTS = 64
+HEIGHT = 64
 LR = 1e-3
 EPOCHS = 8
 MODEL_NAME = 'pygtav-car-{}-{}-{}-epochs.model'.format(LR, 'alexnet', EPOCHS)
