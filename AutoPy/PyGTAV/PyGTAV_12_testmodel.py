@@ -71,8 +71,8 @@ def main():
             screen = grab_screen(region=(8, 96, 1032, 734)) # (0,40,800,640)
             screen = cv2.cvtColor(screen, cv2.COLOR_BGR2GRAY)
             screen = cv2.resize(screen, (102, 64)) # roughly 0.1 scale
-            λtime = time.time()-last_time()
-            print('Frame: {} seconds. FPS: {}'.format(λtime, 1/λtime)
+            λtime = time.time()-last_time
+            print('Frame: {} seconds. FPS: {}'.format(λtime, 1/λtime))
             last_time = time.time()
 
             # returns list of predicted one-hot moves. last arg 1 for Grayscale;
@@ -88,19 +88,21 @@ def main():
                 straight()
             elif moves == [0,0,1]:
                 right()
+            elif moves == [0,0,0]:
+                straight()
 
         # for stopping program
         keys = key_check()
-            if 'T' in keys:
-                if paused:
-                    paused = False
-                    time.sleep(1)
-                else:
-                    pausd = True
-                    ReleaseKey(A)
-                    ReleaseKey(W)
-                    ReleaseKey(D)
-                    time.sleep(1)
+        if 'Z' in keys:
+            if paused:
+                paused = False
+                time.sleep(1)
+            else:
+                paused = True
+                ReleaseKey(A)
+                ReleaseKey(W)
+                ReleaseKey(D)
+                time.sleep(10)
 
 if __name__ == "__main__":
     main()

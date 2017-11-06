@@ -34,11 +34,13 @@ def keys_to_output(keys):
     # [A,W,D]
     output = [0,0,0]
 
+    # my model was defaulting to RIGHT bc no keys pressed results in RIGHT being
+    # registered. So need to retrain.
     if 'A' in keys:
         output[0] = 1
     elif 'W' in keys:
         output[1] = 1
-    else:   # 'D'
+    elif:   # 'D'
         output[2] = 1
     return output
 
@@ -67,13 +69,14 @@ def main():
         screen = cv2.resize(screen, (102, 64)) # roughly 0.1 scale
         keys = key_check()
         output = keys_to_output(keys)
+        print(output)
         training_data.append([screen, output])
-        print('Frame took {} seconds'.format(time.time()-last_time))
+        # print('Frame took {} seconds'.format(time.time()-last_time))
         last_time = time.time()
 
         if len(training_data) % 500 == 0:
             print(len(training_data))
-            np.save(file_dir+file_name, training_data)
+            # np.save(file_dir+file_name, training_data)
 
 if __name__ == "__main__":
     main()
