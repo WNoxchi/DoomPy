@@ -8,8 +8,8 @@ from collections import Counter
 from random import shuffle
 import cv2
 
-data_dir   = 'train/'
-train_data = np.load(data_dir+'training_data.npy')
+train_dir   = 'train/'
+train_data = np.load(train_dir+'training_data.npy')
 
 print(len(train_data))
 
@@ -49,7 +49,7 @@ final_data = forwards + lefts + rights
 
 shuffle(final_data)
 print(len(final_data))
-np.save(data_dir+'training_data_v2.npy', final_data)
+np.save(train_dir+'training_data_v2.npy', final_data)
 
 
 
@@ -86,5 +86,5 @@ np.save(data_dir+'training_data_v2.npy', final_data)
 # 912
 #
 # (DoomPy) C:\Users\Wayne\DoomPy\AutoPy\PyGTAV>
-# 
+#
 # more or less evenly distributed .... I think..
