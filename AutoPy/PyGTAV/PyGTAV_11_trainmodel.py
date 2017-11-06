@@ -20,6 +20,8 @@ model = alexnet(WIDTH, HEIGHT, LR)
 
 train_dir = 'train/'
 model_dir = 'model/'
+if not os.exists(model_dir):
+    os.mkdir(model_dir)
 train_data = np.load(train_dir+'training_data.npy')
 
 train = train_data[:-500]
