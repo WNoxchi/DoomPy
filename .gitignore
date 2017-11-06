@@ -8,6 +8,10 @@ train/
 test/
 data/
 
+# misc
+log/
+checkpoint
+
 ########### PYTHON TEMPLATE ###########
 # Byte-compiled / optimized / DLL files
 __pycache__/
