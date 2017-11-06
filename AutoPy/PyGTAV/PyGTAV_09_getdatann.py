@@ -33,14 +33,13 @@ import os
 def keys_to_output(keys):
     # [A,W,D]
     output = [0,0,0]
-
     # my model was defaulting to RIGHT bc no keys pressed results in RIGHT being
     # registered. So need to retrain.
     if 'A' in keys:
         output[0] = 1
     elif 'W' in keys:
         output[1] = 1
-    elif:   # 'D'
+    elif: 'D' in keys:
         output[2] = 1
     return output
 
@@ -76,7 +75,7 @@ def main():
 
         if len(training_data) % 500 == 0:
             print(len(training_data))
-            # np.save(file_dir+file_name, training_data)
+            np.save(file_dir+file_name, training_data)
 
 if __name__ == "__main__":
     main()
