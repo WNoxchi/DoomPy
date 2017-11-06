@@ -25,7 +25,10 @@ EPOCHS = 8
 MODEL_NAME = 'pygtav-car-{}-{}-{}-epochs.model'.format(LR, 'alexnet', EPOCHS)
 DIR = 'train/'
 
+turn_thresh = 0.65
+fwd_thresh  = 0.6
 t_time = 0.09
+
 def straight():
     PressKey(W)
     ReleaseKey(A)
@@ -51,20 +54,8 @@ def letgo():
 model = alexnet(WIDTH, HEIGHT, LR)
 model.load(DIR+MODEL_NAME)
 
-file_dir = 'train/'
-file_name = 'training_data.npy'
-if not os.path.exists(file_dir):
-    os.mkdir(file_dir)
-
-if os.path.isfile(file_dir+file_name):
-    print("File exists. Loading data.")
-    training_data = list(np.load(file_dir+file_name))    # this would be faster in pure NumPy
-else:
-    print("File does not exist. Starting new data set.")
-    training_data = []
-
-
 def main():
+    print('Loading Driver Bot. Press \'Z\' to pause 10 seconds, Ctrl-C: Quit')
     for i in list(range(4))[::-1]:
         print(i+1)
         time.sleep(1)
@@ -77,25 +68,38 @@ def main():
             screen = grab_screen(region=(8, 96, 1032, 734)) # (0,40,800,640)
             screen = cv2.cvtColor(screen, cv2.COLOR_BGR2GRAY)
             screen = cv2.resize(screen, (102, 64)) # roughly 0.1 scale
-            λtime = time.time()-last_time
-            print('Frame: {} seconds. FPS: {}'.format(λtime, 1/λtime))
-            last_time = time.time()
+            # λtime = time.time()-last_time
+            # print('Frame: {} seconds. FPS: {}'.format(λtime, 1/λtime))
+            # last_time = time.time()
 
             # returns list of predicted one-hot moves. last arg 1 for Grayscale;
             # 3 if RGB model. We're passing a single feature at a time, and we
             # want to get a single action at a time, so specify 1st idx.
             prediction = model.predict([screen.reshape(WIDTH, HEIGHT, 1)])[0]
-            moves = list(np.around(prediction))
-            print(moves, prediction)
+            # moves = list(np.around(prediction))
+            # print(moves, prediction)
 
-            if moves == [1,0,0]:
-                left()
-            elif moves == [0,1,0]:
+            if prediction[1] > fwd_thresh:
                 straight()
-            elif moves == [0,0,1]:
+                print(prediction, ' FORWARD')
+            elif prediction[0] > turn_thresh:
+                left()
+                print(prediction, ' LEFT')
+            elif prediction[2] > turn_thresh:
                 right()
-            elif moves == [0,0,0]:
+                print(prediction, ' RIGHT')
+            else:
                 letgo()
+                print(prediction, ' LETGO')
+
+            # if moves == [1,0,0]:
+            #     left()
+            # elif moves == [0,1,0]:
+            #     straight()
+            # elif moves == [0,0,1]:
+            #     right()
+            # elif moves == [0,0,0]:
+            #     letgo()
 
         # for stopping program
         keys = key_check()
